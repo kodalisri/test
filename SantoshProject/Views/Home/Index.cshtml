@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+@{
+    ViewBag.Title = "Home Page";
+}
+<div>
+    </div>
+<div>
+    <table>
+        <tr>
+            <td>StartDate:<input type="text" name="startDate" id="datepicker"></td>
+            <td>EndDate:<input type="date" name="EndDate" id="EndDate"></td>
+        </tr>
+        <tr>
+            <td><input type="button" name="GetDetails" value="GetDetails" onclick="find()"/> </td> 
+        </tr>
+
+    </table>
+
+    <div>
+        <h2>All Products</h2>
+        <ul id="products"></ul>
+    </div>
+    
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+   
+        <script>
+            var uri = 'api/FetchDetails';
+
+            $(document).ready(function () {
+                // Send an AJAX request
+                $.getJSON(uri)
+                    .done(function (data) {
+                        // On success, 'data' contains a list of products.
+                        $.each(data, function (key, item) {
+                            // Add a list item for the product.
+                            $('<li>', { text: item.Templatename }).appendTo($('#products'));
+                        });
+                    });
+            });
+            function find() {
+                alert("hello");
+                var date1 = $('#datepicker').val();
+                var date2 = $('#EndDate').val();
+                var test = new Object();
+                test.StartDate = date1;
+                test.EndDate = date2;
+                var mystring = JSON.stringify(test);
+                $.post(uri, mystring)
+                    .done(function (data) {
+                        $('#product').text(data);
+                    })
+                    .fail(function (jqXHR, textStatus, err) {
+                        $('#product').text('Error: ' + err);
+                    });
+            }
+            (function () {
+                $("#datepicker").datepicker();
+            });
+        </script>
+    
+</div>
